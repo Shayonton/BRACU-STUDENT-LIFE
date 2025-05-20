@@ -83,6 +83,13 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/members/{member}/approve', [ClubMemberController::class, 'approve'])->name('members.approve');
     Route::post('/members/{member}/reject', [ClubMemberController::class, 'reject'])->name('members.reject');
     Route::post('/members/{member}/promote', [ClubMemberController::class, 'promote'])->name('members.promote');
+    Route::post('/members/{member}/remove', [ClubMemberController::class, 'remove'])->name('members.remove');
+    Route::get('/my-clubs', [ClubMemberController::class, 'myClubs'])->name('my.clubs')->middleware(['auth', 'student']);
+
+    // Admin-only Club Member Management
+    Route::middleware(['admin'])->group(function () {
+        Route::get('/admin/club-members', [ClubMemberController::class, 'adminManageMembers'])->name('admin.club-members.index');
+    });
 });
 
 // Public Routes

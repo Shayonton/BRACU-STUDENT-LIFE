@@ -99,6 +99,11 @@
                                                     <span class="badge bg-{{ $event->status === 'approved' ? 'success' : ($event->status === 'pending' ? 'warning' : 'danger') }}">
                                                         {{ ucfirst($event->status) }}
                                                     </span>
+                                                    @if($event->status === 'approved')
+                                                        <span class="badge bg-info ms-2">
+                                                            {{ $event->participants()->count() }} Pre-registered
+                                                        </span>
+                                                    @endif
                                                 </td>
                                             @endif
                                             @if(auth()->user()->isStudent())
@@ -153,9 +158,19 @@
                                                 </td>
                                             @elseif(auth()->user()->isClub())
                                                 <td>
-                                                    <a href="{{ route('events.participants', $event) }}" class="btn btn-sm btn-info">
-                                                        <i class="fas fa-users me-1"></i>View Participants
-                                                    </a>
+                                                    <div class="btn-group">
+                                                        <a href="{{ route('events.participants', $event) }}" class="btn btn-sm btn-info">
+                                                            <i class="fas fa-users me-1"></i>View Participants
+                                                            @if($event->participants()->count() > 0)
+                                                                <span class="badge bg-light text-dark ms-1">{{ $event->participants()->count() }}</span>
+                                                            @endif
+                                                        </a>
+                                                        @if($event->status === 'approved')
+                                                            <a href="{{ route('events.show', $event) }}" class="btn btn-sm btn-primary">
+                                                                <i class="fas fa-eye me-1"></i>View Details
+                                                            </a>
+                                                        @endif
+                                                    </div>
                                                 </td>
                                             @endif
                                         </tr>

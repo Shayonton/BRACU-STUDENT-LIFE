@@ -223,6 +223,9 @@
         <li class="nav-item">
             <a class="nav-link" href="{{ route('reviews.index') }}">Reviews</a>
         </li>
+        <a href="{{ route('clubs.index') }}" class="{{ request()->routeIs('clubs.*') ? 'active' : '' }}">
+            <i class="bi bi-people me-2"></i> Clubs
+        </a>
         @auth
         <form method="POST" action="{{ route('logout') }}">
             @csrf

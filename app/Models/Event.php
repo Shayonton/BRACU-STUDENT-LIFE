@@ -52,4 +52,19 @@ class Event extends Model
     {
         return $this->reviews()->avg('rating');
     }
+
+    public function scopeApproved($query)
+    {
+        return $query->where('status', 'approved');
+    }
+
+    public function scopeUpcoming($query)
+    {
+        return $query->where('event_date', '>=', now());
+    }
+
+    public function scopeCreatedBy($query, $userId)
+    {
+        return $query->where('created_by', $userId);
+    }
 } 

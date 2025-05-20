@@ -6,7 +6,14 @@
         <div class="col-md-12 mb-4">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="mb-0">{{ $club->name }} Dashboard</h2>
+                    <h2 class="mb-0 d-flex justify-content-between align-items-center">
+                        {{ $club->name }} Dashboard
+                        @if(auth()->user()->user_type === 'club' && auth()->user()->email === $club->email)
+                            <a href="{{ route('events.create') }}" class="btn btn-primary btn-sm ms-3">
+                                <i class="bi bi-plus-lg me-1"></i> Create Event
+                            </a>
+                        @endif
+                    </h2>
                 </div>
                 <div class="card-body">
                     <div class="row">

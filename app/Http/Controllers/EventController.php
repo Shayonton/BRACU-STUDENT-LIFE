@@ -13,14 +13,9 @@ class EventController extends Controller
         $user = Auth::user();
         
         if ($user->isStudent()) {
-            $events = Event::where('status', 'approved')
-                ->where('event_date', '>=', now())
-                ->orderBy('event_date')
-                ->get();
+            $events = Event::approved()->upcoming()->orderBy('event_date')->get();
         } elseif ($user->isClub()) {
-            $events = Event::where('created_by', $user->id)
-                ->orderBy('created_at', 'desc')
-                ->get();
+            $events = Event::createdBy($user->id)->orderBy('created_at', 'desc')->get();
         } else {
             $events = Event::orderBy('created_at', 'desc')->get();
         }
@@ -30,10 +25,7 @@ class EventController extends Controller
 
     public function upcoming()
     {
-        $events = Event::where('status', 'approved')
-            ->where('event_date', '>=', now())
-            ->orderBy('event_date')
-            ->get();
+        $events = Event::approved()->upcoming()->orderBy('event_date')->get();
 
         return view('events.upcoming', compact('events'));
     }

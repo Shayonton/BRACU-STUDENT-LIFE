@@ -53,14 +53,45 @@
 
                     @auth
                         @if(auth()->user()->user_type === 'student')
-                            <form action="{{ route('clubs.apply', $club) }}" method="POST" class="mt-3">
-                                @csrf
-                                <div class="mb-3">
-                                    <label for="application_note" class="form-label">Why do you want to join this club?</label>
-                                    <textarea name="application_note" id="application_note" class="form-control" rows="3" required></textarea>
+                            @php
+                                $existingMembership = \App\Models\ClubMember::where('user_id', auth()->id())
+                                    ->where('club_id', $club->id)
+                                    ->first();
+                            @endphp
+
+                            @if($existingMembership && $existingMembership->status === 'approved')
+                                <div class="alert alert-success mt-3">
+                                    <i class="fas fa-check-circle me-2"></i>
+                                    You are a member of this club.
                                 </div>
-                                <button type="submit" class="btn btn-primary">Apply to Join</button>
-                            </form>
+                            @elseif($existingMembership && $existingMembership->status === 'pending')
+                                <div class="alert alert-warning mt-3">
+                                    <i class="fas fa-clock me-2"></i>
+                                    Your application is pending review.
+                                </div>
+                            @elseif($existingMembership && $existingMembership->status === 'rejected')
+                                <div class="alert alert-danger mt-3">
+                                    <i class="fas fa-times-circle me-2"></i>
+                                    Your previous application was rejected. You can apply again.
+                                </div>
+                                <form action="{{ route('clubs.apply', $club) }}" method="POST" class="mt-3">
+                                    @csrf
+                                    <div class="mb-3">
+                                        <label for="application_note" class="form-label">Why do you want to join this club?</label>
+                                        <textarea name="application_note" id="application_note" class="form-control" rows="3" required></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Apply Again</button>
+                                </form>
+                            @else
+                                <form action="{{ route('clubs.apply', $club) }}" method="POST" class="mt-3">
+                                    @csrf
+                                    <div class="mb-3">
+                                        <label for="application_note" class="form-label">Why do you want to join this club?</label>
+                                        <textarea name="application_note" id="application_note" class="form-control" rows="3" required></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Apply to Join</button>
+                                </form>
+                            @endif
                         @endif
 
                         @if(auth()->user()->user_type === 'club' && auth()->user()->email === $club->email)
